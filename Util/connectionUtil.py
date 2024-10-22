@@ -5,4 +5,4 @@ class connectionUtility():
     def get_Connection():
         client = MongoClient("mongodb://localhost:27017/")
 
-        return client.get_database("Project1")
+        return client

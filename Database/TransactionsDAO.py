@@ -10,7 +10,7 @@ class TransactionsDAO():
         db = client['Project1']
         collection = db['transactions']
 
-        results = collection.find({"userID": userID})
+        results = collection.find({"userID": ObjectId(userID)})
 
         transactions_arr = []
         for result in results:
@@ -29,7 +29,7 @@ class TransactionsDAO():
         
         return transactions_arr
     
-    def createTransaction(self, userID, purchased, amount, description):
+    def createTransaction(self, new_transaction: transaction):
         client = connectionUtility.get_Connection()
         db = client['Project1']
         collection = db['transactions']
@@ -38,21 +38,63 @@ class TransactionsDAO():
 
         date_now = now.strftime("%m-%d-%y")
 
-        result = collection.insert_one({"userID": userID, "purchased": purchased, 
-                               "amount": amount, "purchasedDate": date_now, "description": description})
+        result = collection.insert_one({"userID": ObjectId(new_transaction.get_userID()), "purchased": new_transaction.get_purchased(), 
+                               "amount": new_transaction.get_amount(), "purchasedDate": date_now, "description": new_transaction.get_description()})
 
         client.close()
 
-        return self.getTransaction(result.inserted_id)
+        return self.getTransaction(ObjectId(result.inserted_id))
     
-    def deleteTransaction(self, userID):
-        pass
+    def deleteTransaction(self, transactionID):
+        client = connectionUtility.get_Connection()
+        db = client['Project1']
+        collection = db['transactions']
+        
+        result = collection.delete_one({"_id": ObjectId(transactionID)})
 
-    def updateTransaction(self, userID):
-        pass
+        return result.deleted_count
 
-    def getUserTransactionByDate(self, userID, month, date, year):
-        pass
+    def updateTransaction(self, transactionID, new_transaction: transaction):
+        client = connectionUtility.get_Connection()
+        db = client['Project1']
+        collection = db['transactions']
+
+        now = datetime.now()
+
+        date_now = now.strftime("%m-%d-%y")
+
+        result = collection.update_one({"_id": ObjectId(transactionID)}, {"$set": {"purchased": new_transaction.get_purchased(), 
+                               "amount": new_transaction.get_amount(), "purchasedDate": date_now, "description": new_transaction.get_description()}})
+
+        client.close()
+
+        return result.modified_count
+
+    def getUserTransactionByDate(self, userID, month, day, year):
+        client = connectionUtility.get_Connection()
+        db = client['Project1']
+        collection = db['transactions']
+
+        date = datetime(year, month, day).strftime("%m-%d-%y")
+
+        results = collection.find({"userID": ObjectId(userID), "purchasedDate": date})
+
+        transactions_arr = []
+        for result in results:
+            new_transaction = transaction(
+                result['_id'],
+                result['userID'],
+                result['purchased'],
+                result['amount'],
+                result['purchasedDate'],
+                result['description'])
+            
+
+            transactions_arr.append(new_transaction)
+            
+        client.close()
+        
+        return transactions_arr
 
     def getTransaction(self, transactionID):
         client = connectionUtility.get_Connection()
@@ -67,15 +109,47 @@ class TransactionsDAO():
         client.close()
 
         return found_transaction
+    
+    def getAllTransactions(self):
+        client = connectionUtility.get_Connection()
+        db = client['Project1']
+        collection = db['transactions']
+
+        results = collection.find()
+
+        transactions_arr = []
+        for result in results:
+            new_transaction = transaction(
+                result['_id'],
+                result['userID'],
+                result['purchased'],
+                result['amount'],
+                result['purchasedDate'],
+                result['description'])
+            
+            transactions_arr.append(new_transaction)
+            
+        client.close()
+        
+        return transactions_arr
+
 
 
 userID = '6716f69eefde3f524d8be6ab'
-object_id = ObjectId(userID)
 testDao = TransactionsDAO()
 
-# new_transaction = testDao.createTransaction(object_id, 'Apple', 30, 'test')
+x = transaction('', userID, 'Bannana', 75, '', 'test update 2')
 
+# new_transaction = testDao.createTransaction(x)
 # print(new_transaction)
-transactions = testDao.getUserTransactions(object_id)
+
+""" transactions = testDao.getUserTransactions(object_id)
+for x in transactions:
+    print(x) """
+
+testDao.deleteTransaction('6717c950d9758d8f19ef570e')
+
+transactions = testDao.getUserTransactionByDate(userID, 10, 22, 2024)
 for x in transactions:
     print(x)
+

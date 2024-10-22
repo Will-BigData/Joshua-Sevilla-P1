@@ -8,4 +8,7 @@ class products():
 
     def getAmount(self):
         return self.__amount__
+    
+    def __str__(self):
+        return f'{self.__amount__} {self.__name__}(s)'
 

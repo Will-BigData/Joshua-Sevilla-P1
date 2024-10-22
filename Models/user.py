@@ -10,11 +10,6 @@ class user():
     def get_email(self):
         return self.__email
     
-    def set_name(self, name):
-        self.__name = name
-    
-    def set_name(self, email):
-        self.__name = email
     
    
     

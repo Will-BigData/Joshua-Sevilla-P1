@@ -16,11 +16,14 @@ class ProductsDAO():
 
         products_arr = []
         for result in results:
-            products_arr.append(result)
+            product = products(result['name'], result['amount'])
+            products_arr.append(product)
 
         return products_arr
 
 
 test = ProductsDAO()
 
-print(test.getProduct('app'))
+products_arr = test.getProduct('app')
+for product in products_arr:
+    print(product.getName() + ": " + str(product.getAmount()))

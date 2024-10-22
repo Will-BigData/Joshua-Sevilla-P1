@@ -1,5 +1,6 @@
 from Util.connectionUtil import connectionUtility
 from bson import ObjectId
+from Models.user import user
 import logging
 
 class UserDao():
@@ -10,10 +11,11 @@ class UserDao():
         collection = db['Users']
 
         result = collection.find_one({"userID": ObjectId(userID)})
+        result_user = user(result['name'], result['email'])
 
         client.close()
 
-        return result
+        return result_user
     
     def getUserByUsername(self, username):
         client = connectionUtility.get_Connection()
@@ -25,7 +27,7 @@ class UserDao():
         client.close()
 
         if result:
-            return result['_id']
+            return self.getUserById(result['_id']) 
         else:
             return 'No Username Found'
     
@@ -109,8 +111,9 @@ class UserDao():
         
 
 testDao = UserDao()
-id = testDao.registerUser("testUser", "password", "user")
+""" id = testDao.registerUser("testUser", "password", "user")
 print(id)
-testDao.createUser(id, 'john', 'john@gmail.com')
+testDao.createUser(id, 'john', 'john@gmail.com') """
 
-
+a_user = testDao.getUserByUsername('admin')
+print(a_user.get_name() + " " + a_user.get_email())

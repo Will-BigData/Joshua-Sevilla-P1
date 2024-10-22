@@ -6,11 +6,6 @@ class products():
     def getName(self):
         return self.__name__
 
-    def setAmount(self):
+    def getAmount(self):
         return self.__amount__
 
-    def setName(self, name):
-        self.__name__ = name
-
-    def setAmount(self, amount):
-        self.__amount__ = amount

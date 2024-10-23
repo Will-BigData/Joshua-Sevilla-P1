@@ -19,5 +19,5 @@ class login():
         return self.__role__
     
     def __str__(self):
-        return f'{self.__username__}, Role: {self.__role__}'
+        return f'Username: {self.__username__}, Role: {self.__role__}, userID: {self.__id__}'
     

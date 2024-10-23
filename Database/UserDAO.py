@@ -12,11 +12,15 @@ class UserDao():
         collection = db['Users']
 
         result = collection.find_one({"userID": ObjectId(userID)})
-        result_user = user(str(result['userID']), result['name'], result['email'])
 
-        client.close()
+        if result:
+            result_user = user(str(result['userID']), result['name'], result['email'])
+            client.close()
+            return result_user
+        else:
+            client.close()
+            return 'No User Found'
 
-        return result_user
     
     def getUserByUsername(self, username) -> user:
         client = connectionUtility.get_Connection()
@@ -38,11 +42,11 @@ class UserDao():
         db = client['Project1']
         collection = db['Users']
 
-        result = collection.insert_one({"userID": ObjectId(new_user.get_id()), "name": new_user.get_name(), "email": new_user.get_email()})
+        collection.insert_one({"userID": ObjectId(new_user.get_id()), "name": new_user.get_name(), "email": new_user.get_email()})
 
         client.close()
 
-        return self.getUserById(result.inserted_id)
+        return self.getUserById(new_user.get_id())
 
     def deleteUser(self, userID) -> int:
         client = connectionUtility.get_Connection()
@@ -76,7 +80,6 @@ class UserDao():
         client.close()
 
         if result:
-            print('logged in')
             return str(result['_id'])
         else:
             return 'wrong credentials'
@@ -86,16 +89,11 @@ class UserDao():
         db = client['Project1']
         collection = db['login']
 
-        result = collection.find_one({"username": new_login.getUsername()})
+        result = collection.insert_one({"username": new_login.getUsername(), "password": new_login.getPassword(), "role": new_login.getRole()})
 
-        if result:
-            client.close()
-            return 'Username already exists'
-        else:
-            result = collection.insert_one({"username": new_login.getUsername(), "password": new_login.getPassword(), "role": new_login.getRole()})
-            client.close()
+        client.close()
 
-            return result.inserted_id
+        return result.inserted_id
         
     def deleteLogin(self, id) -> int:
         client = connectionUtility.get_Connection()
@@ -125,19 +123,42 @@ class UserDao():
 
         result = collection.find_one({"_id": ObjectId(id)})
 
-        login_details = login(str(result['_id']), result['username'], result['password'], result['login'])
+        login_details = login(str(result['_id']), result['username'], result['password'], result['role'])
 
         return login_details
+    
+    def getAllUsers(self):
+        client = connectionUtility.get_Connection()
+        db = client['Project1']
+        collection = db['Users']
 
-testDao = UserDao()
+        results = collection.find()
 
-new_login = login('', "testUser", "password", "user")
-id = testDao.registerUser(new_login)
-if id == 'Username already exists':
-    print(id)
-else:
-    new_user = user(id, 'john', 'john@gmail.com' )
-    print(testDao.createUser(new_user))
-    a_user = testDao.getUserByUsername('testUser')
-    print(a_user)
+        user_arr = []
+        for result in results:
+            result_user = user(str(result['userID']), result['name'], result['email'])
+
+            user_arr.append(result_user)
+
+        client.close()
+
+        return user_arr
+    
+    def getAllLogins(self):
+        client = connectionUtility.get_Connection()
+        db = client['Project1']
+        collection = db['login']
+
+        results = collection.find()
+
+        login_arr = []
+        for result in results:
+            result_login = login(str(result['_id']), result['username'], result['password'], result['role'])
+
+            login_arr.append(result_login)
+
+        client.close()
+
+        return login_arr
+
 

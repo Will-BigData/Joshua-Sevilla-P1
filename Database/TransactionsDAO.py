@@ -53,6 +53,15 @@ class TransactionsDAO():
         result = collection.delete_one({"_id": ObjectId(transactionID)})
 
         return result.deleted_count
+    
+    def deleteUserTransactions(self, userID):
+        client = connectionUtility.get_Connection()
+        db = client['Project1']
+        collection = db['transactions']
+        
+        result = collection.delete_many({"userID": ObjectId(userID)})
+
+        return result.deleted_count
 
     def updateTransaction(self, transactionID, new_transaction: transaction):
         client = connectionUtility.get_Connection()
@@ -134,22 +143,22 @@ class TransactionsDAO():
         return transactions_arr
 
 
+if __name__ == '__main__':
+    userID = '6716f69eefde3f524d8be6ab'
+    testDao = TransactionsDAO()
 
-userID = '6716f69eefde3f524d8be6ab'
-testDao = TransactionsDAO()
+    x = transaction('', userID, 'Bannana', 75, '', 'test update 2')
 
-x = transaction('', userID, 'Bannana', 75, '', 'test update 2')
+    # new_transaction = testDao.createTransaction(x)
+    # print(new_transaction)
 
-# new_transaction = testDao.createTransaction(x)
-# print(new_transaction)
+    """ transactions = testDao.getUserTransactions(object_id)
+    for x in transactions:
+        print(x) """
 
-""" transactions = testDao.getUserTransactions(object_id)
-for x in transactions:
-    print(x) """
+    testDao.deleteTransaction('6717c950d9758d8f19ef570e')
 
-testDao.deleteTransaction('6717c950d9758d8f19ef570e')
-
-transactions = testDao.getUserTransactionByDate(userID, 10, 22, 2024)
-for x in transactions:
-    print(x)
+    transactions = testDao.getUserTransactionByDate(userID, 10, 22, 2024)
+    for x in transactions:
+        print(x)
 

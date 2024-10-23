@@ -1,4 +1,6 @@
 from Database.UserDAO import UserDao
+from Models.user import user
+from Models.login import login
 import re
 
 class ValidationError(Exception):
@@ -13,8 +15,10 @@ class UserService():
         valid = re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email)
         if not valid:
             raise ValidationError("Email format not correct.")
+        
+        new_user = user('', name, email)
 
-        return self.__dao.createUser(name, email)
+        return self.__dao.createUser(new_user)
     
     def getUserByUsername(self, username):
         return self.__dao.getUserByUsername(username)
@@ -28,17 +32,25 @@ class UserService():
         if not valid:
             raise ValidationError("Email format not correct.")
         
-        return self.__dao.updateUser(id, name, email, transactions)
+        edit_user = user(id, name, email)
+        
+        return self.__dao.updateUser(edit_user)
 
     def loginUser(self, username, password):
-        return self.__dao.loginUser(username, password)
+        login_info = login(id, username, password)
 
-    def registerUser(self, id, username, password):
+        return self.__dao.loginUser(login_info)
+
+    def registerUser(self, id, username, password, role):
         if password == "" or password.isspace():
            raise ValidationError("Password cannot be blank or only spaces.")
 
+        new_login = login(id, username, password, role)
 
-        return self.__dao.registerUser(id, username, password)
+        return self.__dao.registerUser(new_login)
+    
+    def getLogin(self, id):
+        return self.__dao.getLogin(id)
     
 
 testdao = UserDao()

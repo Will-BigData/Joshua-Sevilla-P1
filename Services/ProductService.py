@@ -47,11 +47,11 @@ class ProductsService():
 
         return self.__dao.createProduct(product)
     
-    def updateProduct(self, productID, name, price, amount):
+    def updateProduct(self, productID, name, price, amount, old_name):
         if not ObjectId.is_valid(productID):
             raise ValidationError("Improper product ID")
         
-        if self.__dao.doesProductNameExist(name):
+        if self.__dao.doesProductNameExist(name) and name != old_name:
             raise ValidationError('Product name already exists.')
     
         int_values = [price, amount]

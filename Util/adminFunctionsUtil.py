@@ -2,7 +2,7 @@ from Util.validationError import ValidationError
 from Models.user import user as usr
 from Controllers.userController import userController as usC
 from Controllers.transactionController import transactionController as transactionC
-
+from Controllers.productController import productController as prC
 def registerUser(user_controller: usC):
     username = input('Username: ')
     password = input('Password: ')
@@ -224,3 +224,70 @@ def createTransaction(user_controller: usC, transaction_controller: transactionC
             print(e.message)
     else:
         print("Invalid user ID")
+
+def getAllProducts(product_controller: prC):
+    arr = product_controller.getAllProducts()
+    for product in arr:
+        print(product)
+
+def getProductById(product_controller: prC):
+    productID = input("Product ID: ")
+    try:
+        print(product_controller.getProductById(productID))
+    except ValidationError as e:
+        print(e.message)
+
+def createProduct(product_controller: prC):
+    name = input('Input Name: ')
+    price = input('Input Price: ')
+    amount = input('Input Amount: ')
+
+    try:
+        product_controller.createProduct(name, price, amount)
+    except ValidationError as e:
+        print(e.message)
+
+def updateProduct(product_controller: prC):
+    productID = input("Input Product ID: ")
+    try:
+        old_product = product_controller.getProductById(productID)
+        if old_product:
+            print('Leave blank to skip')
+            name = input('Input Name: ')
+            price = input('Input Price: ')
+            amount = input('Input Amount: ')
+
+            if name == '':
+                name = old_product.getName()
+            if price == '':
+                price = old_product.getPrice()
+            if amount == '':
+                amount = old_product.getAmount()
+
+            print(product_controller.updateProduct(productID, name, price, amount, old_product.getName()), 'rows updated')
+        else:
+            print("Invalid Product ID")
+        
+    except ValidationError as e:
+        print(e.message)
+
+def deleteProduct(product_controller: prC):
+    productID = input("Input Product ID: ")
+    try:
+        old_product = product_controller.getProductById(productID)
+        if old_product:
+            print(product_controller.deleteProduct(productID), 'rows deleted')
+        else:
+            print("Invalid Product ID")
+        
+    except ValidationError as e:
+        print(e.message)
+
+
+def getProductLikeName(product_controller: prC):
+    name = input('Input search name: ')
+    arr = product_controller.getProductLikeName(name)
+    for product in arr:
+        print(product)
+
+

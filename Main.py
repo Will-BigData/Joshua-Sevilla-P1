@@ -1,9 +1,12 @@
 from Database.UserDAO import UserDao
 from Database.TransactionsDAO import TransactionsDAO
+from Database.ProductsDAO import ProductsDAO
 from Services.UserService import UserService
 from Services.TransactionService import TransactionService
+from Services.ProductService import ProductsService
 from Controllers.userController import userController as usC
 from Controllers.transactionController import transactionController as transactionC
+from Controllers.productController import productController as pC
 from Util.adminFunctionsUtil import *
 
 def main():
@@ -11,11 +14,16 @@ def main():
     print("Welcome To Client Side Store:")
 
     user_dao = UserDao()
-    transaction_dao = TransactionsDAO()
-    transaction_service = TransactionService(transaction_dao)
     user_service = UserService(user_dao)
     user_controller = usC(user_service)
+
+    transaction_dao = TransactionsDAO()
+    transaction_service = TransactionService(transaction_dao)
     transaction_controller = transactionC(transaction_service)
+
+    product_dao = ProductsDAO()
+    product_service = ProductsService(product_dao)
+    product_controller = pC(product_service)
 
     login_selection = ''
 
@@ -71,6 +79,22 @@ def main():
                             createTransaction(user_controller, transaction_controller)
                         case _:
                             pass
+                elif logged_in_selection == 'p':
+                    function_selection = input('p = Get All Products, i = Get Product by ID, c = Create Product, u = Update Product, n = Get Products By Name, d = Delete Product, Other = back:\n')
+                    match function_selection:
+                        case 'p':
+                            getAllProducts()
+                        case 'i':
+                            getProductById()
+                        case 'c':
+                            createProduct()
+                        case 'u':
+                            updateProduct()
+                        case 'n':
+                            getProductLikeName()
+                        case 'd':
+                           deleteProduct()
+
                 elif logged_in_selection == 'q':
                     break
                 else:

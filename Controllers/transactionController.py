@@ -13,6 +13,9 @@ class transactionController():
     def getUserTransactionByDate(self, userID, month, day, year):
         return self.__service.getUserTransactionByDate(userID, month, day, year)
     
+    def getAllTransactionByDate(self, month, day, year):
+        return self.__service.getAllTransactionByDate(month, day, year)
+
     def getUserTransactions(self, userID):
         return self.__service.getUserTransactions(userID)
     

@@ -3,6 +3,7 @@ from Models.user import user as usr
 from Controllers.userController import userController as usC
 from Controllers.transactionController import transactionController as transactionC
 from Controllers.productController import productController as prC
+
 def registerUser(user_controller: usC):
     username = input('Username: ')
     password = input('Password: ')
@@ -106,7 +107,7 @@ def editUser(user_controller: usC):
     else:
         print('Invalid user ID')
 
-def editLogin(user_controller: usC  ):
+def editUserLogin(user_controller: usC):
     userID = input("Input user's userID: ")
     if type(user_controller.getAccount(userID)) == usr:
         old_info = user_controller.getLogin(userID)
@@ -130,7 +131,7 @@ def editLogin(user_controller: usC  ):
     else:
         print('Invalid user ID')
 
-def getLogin(user_controller: usC):
+def getUserLogin(user_controller: usC):
     userID = input("Input user's userID: ")
     info = user_controller.getLogin(userID)
     if info:
@@ -142,6 +143,20 @@ def getAllTransactions(transaction_controller: transactionC):
     arr = transaction_controller.getAllTransactions()
     for transaction in arr:
         print(transaction)
+
+def getAllTransactionsByDate(transaction_controller: transactionC):
+    month = input("Input month: ")
+    day = input("Input day: ")
+    year = input("Input year (ex: 2024): ")
+    try:
+        arr = transaction_controller.getAllTransactionByDate(month, day, year)
+        if len(arr) == 0:
+            print("No transactions found")
+        else:
+            for transaction in arr:
+                print(transaction)
+    except ValidationError as e:
+        print(e.message)
 
 def getTransactionById(transaction_controller: transactionC):
     id = input('Input Transaction Id: ')   
@@ -283,11 +298,13 @@ def deleteProduct(product_controller: prC):
     except ValidationError as e:
         print(e.message)
 
-
 def getProductLikeName(product_controller: prC):
     name = input('Input search name: ')
     arr = product_controller.getProductLikeName(name)
-    for product in arr:
-        print(product)
+    if len(arr) == 0:
+        print("No Products Found. Search Again.")
+    else:
+        for product in arr:
+            print(product)
 
 

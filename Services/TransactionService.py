@@ -17,15 +17,49 @@ class TransactionService():
         return self.__dao.getAllTransactions()
 
     def getUserTransactionByDate(self, userID, month, day, year):
+        int_values = [month, day, year]
+
+        for value in int_values:
+            try:
+                int(value)
+            except ValueError:
+                raise ValidationError("'{0}' value entered is not numeric".format(value))
+            
+        if not 1900 <= int(year) <= 2100:
+            raise ValidationError("Invalid Year")
+            
+        date_string = "{}-{}-{}".format(month, day, year)
+
         try:
-            date = datetime(year, month, day).strftime("%m-%d-%y")
+            datetime.strptime(date_string, "%m-%d-%Y")
         except ValueError:
             raise ValidationError("Invalid Date")
         
         if not ObjectId.is_valid(userID):
             raise ValidationError("Improper user ID")
         
-        return self.__dao.getUserTransactionByDate(userID, date)
+        return self.__dao.getUserTransactionByDate(userID, date_string)
+    
+    def getAllTransactionByDate(self, month, day, year):
+        int_values = [month, day, year]
+
+        for value in int_values:
+            try:
+                int(value)
+            except ValueError:
+                raise ValidationError("'{0}' value entered is not numeric".format(value))
+            
+        if not 1900 <= int(year) <= 2100:
+            raise ValidationError("Invalid Year")
+            
+        date_string = "{}-{}-{}".format(month, day, year)
+
+        try:
+            datetime.strptime(date_string, "%m-%d-%Y")
+        except ValueError:
+            raise ValidationError("Invalid Date")
+        
+        return self.__dao.getAllTransactionByDate(date_string)
 
     def getUserTransactions(self, userID):
         if not ObjectId.is_valid(userID):
@@ -38,8 +72,9 @@ class TransactionService():
         return self.__dao.deleteUserTransactions(userID)
 
     def createTransaction(self, userID, purchased, amount, price, description):
+        
         now = datetime.now()
-        date_now = now.strftime("%m-%d-%y")
+        date_now = now.strftime("%m-%d-%Y at %I:%M %p")
 
         if not ObjectId.is_valid(userID):
             raise ValidationError("Improper user ID")

@@ -11,11 +11,14 @@ class ProductsDAO():
         db = client['Project1']
         collection = db['products']
 
-        result = collection.find_one({"name": name})
+        result = collection.find_one({"name": {"$regex": name, "$options": "i"}})
 
         if result:
-            return True
+            product = products(str(result['_id']), result['name'], result['price'], result['amount'])
+            client.close()
+            return product
         else:
+            client.close()
             return False
 
     def getProductLikeName(self, name):

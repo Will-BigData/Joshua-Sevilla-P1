@@ -7,6 +7,9 @@ class productController():
     def getProductLikeName(self, name):
         return self.__service.getProductLikeName(name)
     
+    def doesProductNameExist(self, name):
+        return self.__service.doesProductNameExist(name)
+    
     def getProductById(self, productID):
         return self.__service.getProductByID(productID)
     

@@ -1,6 +1,7 @@
 from Util.connectionUtil import connectionUtility
 from Models.transaction import transaction
 from bson import ObjectId
+import re
 
 class TransactionsDAO():
    
@@ -75,7 +76,35 @@ class TransactionsDAO():
         db = client['Project1']
         collection = db['transactions']
 
-        results = collection.find({"userID": ObjectId(userID), "purchasedDate": date})
+        pattern = re.compile(date, re.IGNORECASE)
+
+        results = collection.find({"userID": ObjectId(userID), "purchasedDate": pattern})
+
+        transactions_arr = []
+        for result in results:
+            new_transaction = transaction(
+                result['_id'],
+                result['userID'],
+                result['purchased'],
+                result['amount'],
+                result['purchasedDate'],
+                result['description'],
+                result['price'])            
+
+            transactions_arr.append(new_transaction)
+            
+        client.close()
+        
+        return transactions_arr
+    
+    def getAllTransactionByDate(self, date):
+        client = connectionUtility.get_Connection()
+        db = client['Project1']
+        collection = db['transactions']
+
+        pattern = re.compile(date, re.IGNORECASE)
+
+        results = collection.find({"purchasedDate": pattern})
 
         transactions_arr = []
         for result in results:

@@ -190,7 +190,8 @@ def updateTransaction(transaction_controller: transactionC):
             print("Leave blank to skip")
             purchased = input('Input Purchased: ')
             amount = input('Amount Purchased: ')
-            description = input('Description Purchased: ')
+            price = input('Input Price: ')
+            description = input("Input transaction description (Optional): ")
 
             if purchased == '':
                 purchased = transaction.get_purchased()
@@ -198,8 +199,10 @@ def updateTransaction(transaction_controller: transactionC):
                 amount = transaction.get_amount()
             if description == '':
                 description == transaction.get_description()
+            if price == '':
+                price == transaction.get_price()
             try:
-                print(transaction_controller.updateTransaction(id, purchased, amount, description), 'rows updated')
+                print(transaction_controller.updateTransaction(id, purchased, amount, price, description), 'rows updated')
             except ValidationError as e:
                 print(e.message)
         else:
@@ -207,4 +210,17 @@ def updateTransaction(transaction_controller: transactionC):
     except ValidationError as e:
         print(e.message)
 
+def createTransaction(user_controller: usC, transaction_controller: transactionC):
+    userID = input("Input User's ID: ")
+    purchased = input("Input item purchased: ")
+    amount = input("Input amount purchased: ")
+    price = input('Input Price: ')
+    description = input("Input transaction description (Optional): ")
 
+    if user_controller.getLogin(userID):
+        try:
+            print(transaction_controller.createTransaction(userID, purchased, amount, price, description))
+        except ValidationError as e:
+            print(e.message)
+    else:
+        print("Invalid user ID")

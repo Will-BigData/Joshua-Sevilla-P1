@@ -19,11 +19,11 @@ class transactionController():
     def deleteUserTransactions(self, userID):
         return self.__service.deleteUserTransactions(userID)
     
-    def createTransaction(self, userID, purchased, amount, description):
-        return self.__service.createTransaction(userID, purchased, amount, description)
+    def createTransaction(self, userID, purchased, amount, price, description):
+        return self.__service.createTransaction(userID, purchased, amount, price, description)
     
-    def updateTransaction(self, transactionID, purchased, amount, description):
-        return self.__service.updateTransaction(transactionID, purchased, amount, description)
+    def updateTransaction(self, transactionID, purchased, amount, price, description):
+        return self.__service.updateTransaction(transactionID, purchased, amount, price, description)
     
     def deleteTransaction(self, transactionID):
         return self.__service.deleteTransaction(transactionID)

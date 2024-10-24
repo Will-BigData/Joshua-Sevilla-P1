@@ -19,9 +19,9 @@ class TransactionsDAO():
                 result['purchased'],
                 result['amount'],
                 result['purchasedDate'],
-                result['description'])
+                result['description'],
+                result['price'])
             
-
             transactions_arr.append(new_transaction)
             
         client.close()
@@ -34,7 +34,7 @@ class TransactionsDAO():
         collection = db['transactions']
 
         result = collection.insert_one({"userID": ObjectId(new_transaction.get_userID()), "purchased": new_transaction.get_purchased(), 
-                               "amount": new_transaction.get_amount(), "purchasedDate": new_transaction.get_purchasedDate(), "description": new_transaction.get_description()})
+                               "amount": int(new_transaction.get_amount()), "purchasedDate": new_transaction.get_purchasedDate(), "price": int(new_transaction.get_price()), "description": new_transaction.get_description()})
 
         client.close()
 
@@ -64,7 +64,7 @@ class TransactionsDAO():
         collection = db['transactions']
 
         result = collection.update_one({"_id": ObjectId(new_transaction.get_transactionID())}, {"$set": {"purchased": new_transaction.get_purchased(), 
-                               "amount": new_transaction.get_amount(), "description": new_transaction.get_description()}})
+                               "amount": int(new_transaction.get_amount()), "price": int(new_transaction.get_price()), "description": new_transaction.get_description()}})
 
         client.close()
 
@@ -85,8 +85,8 @@ class TransactionsDAO():
                 result['purchased'],
                 result['amount'],
                 result['purchasedDate'],
-                result['description'])
-            
+                result['description'],
+                result['price'])            
 
             transactions_arr.append(new_transaction)
             
@@ -103,7 +103,7 @@ class TransactionsDAO():
 
         if result:
             found_transaction = transaction(str(result["_id"]), result["userID"], result["purchased"],
-                                        result["amount"], result["purchasedDate"], result["description"])
+                                        result["amount"], result["purchasedDate"], result["description"], result['price'])
             client.close()
             return found_transaction
         else:
@@ -126,7 +126,8 @@ class TransactionsDAO():
                 result['purchased'],
                 result['amount'],
                 result['purchasedDate'],
-                result['description'])
+                result['description'],
+                result['price'])
             
             transactions_arr.append(new_transaction)
             

@@ -37,35 +37,57 @@ class TransactionService():
             raise ValidationError("Improper user ID")
         return self.__dao.deleteUserTransactions(userID)
 
-    def createTransaction(self, userID, purchased, amount, description):
+    def createTransaction(self, userID, purchased, amount, price, description):
         now = datetime.now()
         date_now = now.strftime("%m-%d-%y")
 
         if not ObjectId.is_valid(userID):
             raise ValidationError("Improper user ID")
+        
+        int_values = [amount, price]
 
-        if type(amount) != int:
-            raise ValidationError('Amount must be a number')
+        for value in int_values:
+            try:
+                int(value)
+            except ValueError:
+                raise ValidationError("'{0}' value entered is not numeric".format(value))
 
-        if amount < 0:
+        if int(amount) < 0:
             raise ValidationError('Amount must be greater than 0')
         
-        new_transaction = transaction('', userID, purchased, amount, date_now, description)
+        if int(price) < 0:
+            raise ValidationError('Price must be greater than 0')
+        
+        if purchased.isspace() or purchased == '':
+            raise ValidationError('Item purchased is required')
+        
+        new_transaction = transaction('', userID, purchased, amount, date_now, description, price)
 
         return self.__dao.createTransaction(new_transaction)
     
-    def updateTransaction(self, transactionID, purchased, amount, description):
+    def updateTransaction(self, transactionID, purchased, amount, price, description):
 
         if not ObjectId.is_valid(transactionID):
             raise ValidationError("Improper transaction ID")
 
-        if type(amount) != int:
-            raise ValidationError('Amount must be a number')
-        
-        if amount < 0:
+        int_values = [amount, price]
+
+        for value in int_values:
+            try:
+                int(value)
+            except ValueError:
+                raise ValidationError("'{0}' value entered is not numeric".format(value))
+
+        if int(amount) < 0:
             raise ValidationError('Amount must be greater than 0')
         
-        new_transaction = transaction(transactionID, '', purchased, amount, '', description)
+        if int(price) < 0:
+            raise ValidationError('Price must be greater than 0')
+        
+        if purchased.isspace() or purchased == '':
+            raise ValidationError('Item purchased is required')
+        
+        new_transaction = transaction(transactionID, '', purchased, amount, '', description, price)
 
         return self.__dao.updateTransaction(new_transaction)
     

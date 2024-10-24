@@ -32,10 +32,9 @@ def main():
 
             # admin features
             while(is_logged_in and logged_in_selection != 'q' and role == 'admin'):
-                logged_in_selection = input('Selections: u = user functions, t = transaction functions, q = logout:\n')
-                
+                logged_in_selection = input('Selections: u = user functions, t = transaction functions, p = product functions, q = logout:\n')
                 if logged_in_selection == 'u':
-                    function_selection = input('u = Get all users, l = Get all logins, d = delete user, f = find user, e = edit user, x = edit login, p = get login, any other key = back:\n')
+                    function_selection = input('u = Get All Users, l = Get All Logins, d = Delete User, f = Find User, e = Edit User, x = Edit Login, p = Get Login, Other = back:\n')
                     match function_selection:
                         case 'u': 
                             getAllUsers(user_controller)
@@ -53,9 +52,8 @@ def main():
                             getLogin(user_controller)
                         case _:
                             pass
-                
                 elif logged_in_selection == 't':
-                    function_selection = input('t = Get all transactions, i = Get transaction by id, g = Get user transactions, x = delete all user transactions, d = Delete transaction, u = Update transaction, any other key = back:\n')
+                    function_selection = input('t = Get All Transactions, i = Get Transaction by ID, g = Get User Transactions, x = Delete All User transactions, d = Delete transaction, u = Update Transaction, c = Create Transaction, Other = back:\n')
                     match function_selection:
                         case 't':
                            getAllTransactions(transaction_controller)
@@ -69,6 +67,8 @@ def main():
                             deleteTransaction(transaction_controller)
                         case 'u':
                             updateTransaction(transaction_controller)
+                        case 'c':
+                            createTransaction(user_controller, transaction_controller)
                         case _:
                             pass
                 elif logged_in_selection == 'q':

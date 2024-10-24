@@ -1,6 +1,5 @@
 from Util.connectionUtil import connectionUtility
 from Models.transaction import transaction
-from datetime import datetime
 from bson import ObjectId
 
 class TransactionsDAO():
@@ -102,12 +101,15 @@ class TransactionsDAO():
 
         result = collection.find_one({"_id": ObjectId(transactionID)})
 
-        found_transaction = transaction(str(result["_id"]), result["userID"], result["purchased"],
+        if result:
+            found_transaction = transaction(str(result["_id"]), result["userID"], result["purchased"],
                                         result["amount"], result["purchasedDate"], result["description"])
+            client.close()
+            return found_transaction
+        else:
+            client.close()
+            return None
         
-        client.close()
-
-        return found_transaction
     
     def getAllTransactions(self):
         client = connectionUtility.get_Connection()
@@ -132,23 +134,4 @@ class TransactionsDAO():
         
         return transactions_arr
 
-
-if __name__ == '__main__':
-    userID = '6716f69eefde3f524d8be6ab'
-    testDao = TransactionsDAO()
-
-    x = transaction('', userID, 'Bannana', 75, '', 'test update 2')
-
-    # new_transaction = testDao.createTransaction(x)
-    # print(new_transaction)
-
-    """ transactions = testDao.getUserTransactions(object_id)
-    for x in transactions:
-        print(x) """
-
-    testDao.deleteTransaction('6717c950d9758d8f19ef570e')
-
-    transactions = testDao.getUserTransactionByDate(userID, 10, 22, 2024)
-    for x in transactions:
-        print(x)
 

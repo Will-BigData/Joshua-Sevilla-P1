@@ -123,9 +123,11 @@ class UserDao():
 
         result = collection.find_one({"_id": ObjectId(id)})
 
-        login_details = login(str(result['_id']), result['username'], result['password'], result['role'])
-
-        return login_details
+        if result:
+            login_details = login(str(result['_id']), result['username'], result['password'], result['role'])
+            return login_details
+        else:
+            return None
     
     def getAllUsers(self):
         client = connectionUtility.get_Connection()

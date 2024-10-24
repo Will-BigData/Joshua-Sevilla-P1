@@ -2,6 +2,7 @@ from Database.UserDAO import UserDao
 from Models.user import user
 from Models.login import login
 from Util.validationError import ValidationError
+from bson import ObjectId
 import re
 
 class UserService():
@@ -65,14 +66,20 @@ class UserService():
         return self.__dao.registerUser(new_login)
     
     def getAccount(self, userID):
-        result = self.__dao.getUserById(userID)
-
-        if result == 'No User Found':
+        if not ObjectId.is_valid(userID):
             return userID
         else:
-            return result
+            result = self.__dao.getUserById(userID)
+
+            if result == 'No User Found':
+                return userID
+            else:
+                return result
     
     def getLogin(self, id):
+        if not ObjectId.is_valid(id):
+            return None
+        
         return self.__dao.getLogin(id)
     
     def editLogin(self, id, username, password, role):

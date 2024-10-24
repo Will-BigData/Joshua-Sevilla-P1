@@ -76,8 +76,6 @@ class TransactionsDAO():
         db = client['Project1']
         collection = db['transactions']
 
-        date = datetime(year, month, day).strftime("%m-%d-%y")
-
         results = collection.find({"userID": ObjectId(userID), "purchasedDate": date})
 
         transactions_arr = []

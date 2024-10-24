@@ -4,8 +4,6 @@ from Services.UserService import UserService
 from Services.TransactionService import TransactionService
 from Controllers.userController import userController as usC
 from Controllers.transactionController import transactionController as transactionC
-from Models.user import user as usr
-from Services.UserService import ValidationError
 from Util.adminFunctionsUtil import *
 
 def main():
@@ -46,8 +44,7 @@ def main():
                         case 'd':
                             deleteUser(user_controller, transaction_controller, session_id)
                         case 'f':
-                            username = input("Input user's username: ")
-                            print(user_controller.getUserByUsername(username))
+                            findUser(user_controller)
                         case 'e':
                             editUser(user_controller)
                         case 'x':
@@ -81,15 +78,7 @@ def main():
                 
 
         elif login_selection == 'r':
-            username = input('Username: ')
-            password = input('Password: ')
-            
-            try:
-                user_controller.registerUser(username, password, 'user')
-                print('Login Created!\nLogin To Create Account')
-            except ValidationError as e:
-                print(e.message, 'Try Again.')
-
+            registerUser(user_controller)
         elif login_selection == 'q':
             print('See you next time')
         else:

@@ -25,6 +25,8 @@ class UserService():
         return self.__dao.getUserByUsername(username)
     
     def deleteUser(self, id, userID):
+        if not ObjectId.is_valid(id):
+            raise ValidationError("Improper user ID")
 
         if id == userID:
             raise ValidationError('Cannot delete self')
@@ -35,6 +37,9 @@ class UserService():
         valid = re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email)
         if not valid:
             raise ValidationError("Email format not correct.")
+        
+        if not ObjectId.is_valid(id):
+            raise ValidationError("Improper user ID")
         
         edit_user = user(id, name, email)
         
@@ -85,6 +90,9 @@ class UserService():
     def editLogin(self, id, username, password, role):
         new_login = login(id, username, password, role)
 
+        if not ObjectId.is_valid(id):
+            raise ValidationError("Improper user ID")
+
         if password == "" or password.isspace():
            raise ValidationError("Password cannot be blank or only spaces.")
         
@@ -97,6 +105,9 @@ class UserService():
         return self.__dao.editLogin(new_login)
 
     def deleteLogin(self, id):
+        if not ObjectId.is_valid(id):
+            raise ValidationError("Improper user ID")
+        
         return self.__dao.deleteLogin(id)
 
     def getAllUsers(self):

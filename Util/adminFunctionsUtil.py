@@ -1,7 +1,17 @@
-from validationError import ValidationError
+from Util.validationError import ValidationError
 from Models.user import user as usr
 from Controllers.userController import userController as usC
 from Controllers.transactionController import transactionController as transactionC
+
+def registerUser(user_controller: usC):
+    username = input('Username: ')
+    password = input('Password: ')
+    
+    try:
+        user_controller.registerUser(username, password, 'user')
+        print('Login Created!\nLogin To Create Account')
+    except ValidationError as e:
+        print(e.message, 'Try Again.')
 
 def loginUser(user_controller: usC, username, password):
     user_session_id = user_controller.loginUser(username, password)
@@ -19,11 +29,11 @@ def createUserAccount(user_controller: usC, id):
     email = input("Email: ")
     try:
         account = user_controller.createUser(id, name, email)
-        print('Account created!')
+        print('Account created! Login to start shopping!')
         return account
     except ValidationError as e:
         print(e.message)
-        print('Log in and try again')
+        print('Login and try again')
         return False
     
 def loginFunction(user_controller: usC):
@@ -73,6 +83,10 @@ def deleteUser(user_controller: usC, transaction_controller: transactionC, sessi
             print(e.message)
     else:
         print('Invalid User ID')
+
+def findUser(user_controller: usC):
+    username = input("Input user's username: ")
+    print(user_controller.getUserByUsername(username))
 
 def editUser(user_controller: usC):
     userID = input("Input user's userID: ")
@@ -131,55 +145,66 @@ def getAllTransactions(transaction_controller: transactionC):
 
 def getTransactionById(transaction_controller: transactionC):
     id = input('Input Transaction Id: ')   
-    found = transaction_controller.getTransactionById(id)                      
-    if found:
-        print(found)
-    else:
-        print('Invalid transaction ID')
+    try:
+        print(transaction_controller.getTransactionById(id))                      
+    except ValidationError as e:
+        print(e.message)
 
 def getUserTransactions(transaction_controller: transactionC, user_controller: usC):
     userID = input("Input user's id: ")
-    if user_controller.getAccount(userID):
-        arr = transaction_controller.getUserTransactions(userID)
-        for transaction in arr:
-            print(transaction)
-    else:
-        print('Invalid user ID')
+    try:
+        if user_controller.getAccount(userID):
+            arr = transaction_controller.getUserTransactions(userID)
+            for transaction in arr:
+                print(transaction)
+        else:
+            print('Invalid user ID')
+    except ValidationError as e:
+        print(e.message)
 
 def deleteAllUserTransactions(transaction_controller: transactionC, user_controller: usC):
     userID = input("Input user's id: ")
-    if user_controller.getAccount(userID):
-        transaction_controller.deleteUserTransactions(userID)
-    else:
-        print('Invalid user ID')
+    try:
+        if user_controller.getAccount(userID):
+            print(transaction_controller.deleteUserTransactions(userID), 'Rows Deleted')
+        else:
+            print('Invalid user ID')
+    except ValidationError as e:
+        print(e.message)
 
 def deleteTransaction(transaction_controller: transactionC):
     id = input('Input Transaction Id: ')
-    if transaction_controller.getTransactionById(id):
-        print(transaction_controller.deleteTransaction(id), ' Deleted')
-    else:
-        print('Invalid transaction ID')
+    try:
+        if transaction_controller.getTransactionById(id):
+            print(transaction_controller.deleteTransaction(id), ' Deleted')
+        else:
+            print('Invalid transaction ID')
+    except ValidationError as e:
+        print(e.message)
 
 def updateTransaction(transaction_controller: transactionC):
     id = input('Input Transaction Id: ')
-    transaction = transaction_controller.getTransactionById(id)
-    if transaction:
-        print("Leave blank to skip")
-        purchased = input('Input Purchased: ')
-        amount = input('Amount Purchased: ')
-        description = input('Description Purchased: ')
+    try:
+        transaction = transaction_controller.getTransactionById(id)
+        if transaction:
+            print("Leave blank to skip")
+            purchased = input('Input Purchased: ')
+            amount = input('Amount Purchased: ')
+            description = input('Description Purchased: ')
 
-        if purchased == '':
-            purchased = transaction.get_purchased()
-        if amount == '':
-            amount = transaction.get_amount()
-        if description == '':
-            description == transaction.get_description()
-        try:
-            print(transaction_controller.updateTransaction(id, purchased, amount, description), 'rows updated')
-        except ValidationError as e:
-            print(e.message)
-    else:
-        print('Invalid transaction ID')
+            if purchased == '':
+                purchased = transaction.get_purchased()
+            if amount == '':
+                amount = transaction.get_amount()
+            if description == '':
+                description == transaction.get_description()
+            try:
+                print(transaction_controller.updateTransaction(id, purchased, amount, description), 'rows updated')
+            except ValidationError as e:
+                print(e.message)
+        else:
+            print('Invalid transaction ID')
+    except ValidationError as e:
+        print(e.message)
 
 

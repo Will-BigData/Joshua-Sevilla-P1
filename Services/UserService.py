@@ -1,11 +1,8 @@
 from Database.UserDAO import UserDao
 from Models.user import user
 from Models.login import login
+from Util.validationError import ValidationError
 import re
-
-class ValidationError(Exception):
-    def __init__(self, message):            
-        self.message = message
 
 class UserService():
     def __init__(self, dao: UserDao):

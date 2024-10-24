@@ -34,12 +34,8 @@ class TransactionsDAO():
         db = client['Project1']
         collection = db['transactions']
 
-        now = datetime.now()
-
-        date_now = now.strftime("%m-%d-%y")
-
         result = collection.insert_one({"userID": ObjectId(new_transaction.get_userID()), "purchased": new_transaction.get_purchased(), 
-                               "amount": new_transaction.get_amount(), "purchasedDate": date_now, "description": new_transaction.get_description()})
+                               "amount": new_transaction.get_amount(), "purchasedDate": new_transaction.get_purchasedDate(), "description": new_transaction.get_description()})
 
         client.close()
 
@@ -63,23 +59,19 @@ class TransactionsDAO():
 
         return result.deleted_count
 
-    def updateTransaction(self, transactionID, new_transaction: transaction):
+    def updateTransaction(self, new_transaction: transaction):
         client = connectionUtility.get_Connection()
         db = client['Project1']
         collection = db['transactions']
 
-        now = datetime.now()
-
-        date_now = now.strftime("%m-%d-%y")
-
-        result = collection.update_one({"_id": ObjectId(transactionID)}, {"$set": {"purchased": new_transaction.get_purchased(), 
-                               "amount": new_transaction.get_amount(), "purchasedDate": date_now, "description": new_transaction.get_description()}})
+        result = collection.update_one({"_id": ObjectId(new_transaction.get_transactionID())}, {"$set": {"purchased": new_transaction.get_purchased(), 
+                               "amount": new_transaction.get_amount(), "description": new_transaction.get_description()}})
 
         client.close()
 
         return result.modified_count
 
-    def getUserTransactionByDate(self, userID, month, day, year):
+    def getUserTransactionByDate(self, userID, date):
         client = connectionUtility.get_Connection()
         db = client['Project1']
         collection = db['transactions']

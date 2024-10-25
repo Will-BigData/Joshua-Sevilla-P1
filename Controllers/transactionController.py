@@ -30,3 +30,21 @@ class transactionController():
     
     def deleteTransaction(self, transactionID):
         return self.__service.deleteTransaction(transactionID)
+    
+    def getTransactionsByPurchased(self, userID, name):
+        return self.__service.getUserTransactionsByPurchased(userID, name)
+    
+    def getSumOfUserTransactions(self, userID):
+        return self.__service.getSumOfUserTransactions(userID)
+    
+    def getTotalOfEachProduct(self):
+        return self.__service.getTotalOfEachProduct()
+
+    def getTotalOfEachUser(self):
+        return self.__service.getTotalOfEachUser()
+    
+    def getSumOfAllTransactions(self):
+        return self.__service.getSumOfAllTransactions()
+    
+    def getUserTotalOfEachProduct(self, userID):
+        return self.__service.getUserTotalOfEachProduct(userID)

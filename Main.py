@@ -67,7 +67,7 @@ def main():
                         case _:
                             pass
                 elif logged_in_selection == 't':
-                    function_selection = input('t = Get All Transactions, i = Get Transaction by ID, g = Get User Transactions, x = Delete All User transactions,\nd = Delete transaction, u = Update Transaction, c = Create Transaction, m = Get All Transactions By Date, Other = back:\n')
+                    function_selection = input('t = Get All Transactions, i = Get Transaction by ID, g = Get User Transactions, x = Delete All User transactions, d = Delete transaction, u = Update Transaction,\nc = Create Transaction, m = Get All Transactions By Date, s = Sum All Transactions, p = Sum Transactions by Product, a = Sum Transactions by Users, Other = back:\n')
                     match function_selection:
                         case 't':
                             getAllTransactions(transaction_controller)
@@ -85,6 +85,12 @@ def main():
                             createTransaction(user_controller, transaction_controller)
                         case 'm':
                             getAllTransactionsByDate(transaction_controller)
+                        case 's':
+                            getSumOfAllTransactions(transaction_controller)
+                        case 'p':
+                            getSumOfEachProduct(transaction_controller)
+                        case 'a':
+                            getSumOfEachUser(transaction_controller)
                         case _:
                             pass
                 elif logged_in_selection == 'p':
@@ -126,7 +132,7 @@ def main():
                         case _:
                             pass                       
                 elif logged_in_selection == 't':
-                    function_selection = input('v = View Transactions, i = Get Transaction By ID, g = Get Transactions By Date, Other = back:\n')
+                    function_selection = input('v = View Transactions, i = Get Transaction By ID, g = Get Transactions By Date, p = Get Transactions By Purchased, s = Sum Transactions, d = Sum Of Each Product Purchased, Other = back:\n')
                     match function_selection:
                         case 'v':
                             viewTransactions(transaction_controller, user_controller, session_id)
@@ -134,6 +140,12 @@ def main():
                             getTransactionById(transaction_controller)
                         case 'g':
                             getAllUserTransactionsByDate(user_controller, transaction_controller, session_id)
+                        case 'p':
+                            getTransactionsByPurchased(transaction_controller, user_controller, session_id)
+                        case 'd':
+                            getUserTotalOfEachProduct(transaction_controller, user_controller, session_id)
+                        case 's':
+                            sumTransactions(transaction_controller, user_controller, session_id)
                         case _:
                             pass   
                 elif logged_in_selection == 'p':

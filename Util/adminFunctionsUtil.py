@@ -166,6 +166,18 @@ def getAllTransactions(transaction_controller: transactionC):
     for transaction in arr:
         print(transaction)
 
+def getSumOfEachProduct(transaction_controller: transactionC):
+    logging.info('Attempting to sum transactions by product.')
+    print(transaction_controller.getTotalOfEachProduct())
+
+def getSumOfEachUser(transaction_controller: transactionC):
+    logging.info('Attempting to sum transactions by users.')
+    print(transaction_controller.getTotalOfEachUser())
+
+def getSumOfAllTransactions(transaction_controller: transactionC):
+    logging.info('Attempting to sum transactions.')
+    print(f'Sum of all transactions: ${transaction_controller.getSumOfAllTransactions()}')
+
 def getAllTransactionsByDate(transaction_controller: transactionC):
     logging.info('Attempting to retrieve all transactions by date.')
     month = input("Input month: ")

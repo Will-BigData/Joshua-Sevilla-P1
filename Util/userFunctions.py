@@ -76,8 +76,47 @@ def viewTransactions(transaction_controller: transactionC, user_controller: usC,
     try:
         if user_controller.getAccount(session_id):
             arr = transaction_controller.getUserTransactions(session_id)
-            for transaction in arr:
-                print(transaction)
+            if len(arr) == 0:
+                print("No transactions found")
+            else:
+                for transaction in arr:
+                    print(transaction)
+        else:
+            print('Invalid user ID')
+    except ValidationError as e:
+        print(e.message)
+
+def sumTransactions(transaction_controller: transactionC, user_controller: usC, session_id):
+    logging.info("Attempting to sum user's transactions.")
+    try:
+        if user_controller.getAccount(session_id):
+            print(f'Sum of all transactions: ${transaction_controller.getSumOfUserTransactions(session_id)}')
+        else:
+            print('Invalid user ID')
+    except ValidationError as e:
+        print(e.message)
+
+def getUserTotalOfEachProduct(transaction_controller: transactionC, user_controller: usC, session_id):
+    logging.info("Attempting to retrieve m user's transactions based on purchased.")
+    try:
+        if user_controller.getAccount(session_id):
+            print(transaction_controller.getUserTotalOfEachProduct(session_id))
+        else:
+            print('Invalid user ID')
+    except ValidationError as e:
+        print(e.message)
+
+def getTransactionsByPurchased(transaction_controller: transactionC, user_controller: usC, session_id):
+    logging.info("Attempting to retrieve m user's transactions based on purchased.")
+    name = input('Input product name: ')
+    try:
+        if user_controller.getAccount(session_id):
+            arr = transaction_controller.getTransactionsByPurchased(session_id, name)
+            if len(arr) == 0:
+                print("No transactions found.")
+            else:
+                for transaction in arr:
+                    print(transaction)
         else:
             print('Invalid user ID')
     except ValidationError as e:

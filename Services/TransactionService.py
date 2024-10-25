@@ -132,5 +132,29 @@ class TransactionService():
         
         return self.__dao.deleteTransaction(transactionID)
     
+    def getUserTransactionsByPurchased(self, userID, name):
+        return self.__dao.getTransactionsByPurchased(userID, name)
+    
+    def getSumOfUserTransactions(self, userID):
+        if not ObjectId.is_valid(userID):
+            raise ValidationError("Improper user ID")
+        
+        return self.__dao.getSumOfUserTransactions(userID)
+    
+    def getUserTotalOfEachProduct(self, userID):
+        if not ObjectId.is_valid(userID):
+            raise ValidationError("Improper user ID")
+        
+        return self.__dao.getUserTotalOfEachProduct(userID)
+    
+    def getSumOfAllTransactions(self):
+        return self.__dao.getSumOfAllTransactions()
+    
+    def getTotalOfEachProduct(self):
+        return self.__dao.getTotalOfEachProduct()
+    
+    def getTotalOfEachUser(self):
+        return self.__dao.getTotalOfEachUser()
+    
 
     

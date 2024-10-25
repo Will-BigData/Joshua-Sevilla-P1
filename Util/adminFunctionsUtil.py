@@ -142,7 +142,7 @@ def editUserLogin(user_controller: usC):
         if password == '':
             password = old_info.getPassword()
         if role == '':
-            role == old_info.getRole()
+            role = old_info.getRole()
         
         try:
             print(user_controller.editLogin(userID, username, password, role), 'rows updated')
@@ -156,7 +156,7 @@ def getUserLogin(user_controller: usC):
     userID = input("Input user's userID: ")
     info = user_controller.getLogin(userID)
     if info:
-        print(info, info.getPassword())
+        print(info, '-Password:' , info.getPassword())
     else:
         print('User not found try again.')
 

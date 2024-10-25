@@ -3,15 +3,19 @@ from Models.user import user as usr
 from Controllers.userController import userController as usC
 from Controllers.transactionController import transactionController as transactionC
 from Controllers.productController import productController as prC
+import logging
 
 def getAccount(user_controller: usC, session_id):
+    logging.info("Attempting to retrieve user's account.")
     print(user_controller.getAccount(session_id))
 
 def getLogin(user_controller: usC, session_id):
+    logging.info("Attempting to retrieve user's login.")
     login = user_controller.getLogin(session_id)
-    print(login, ',Password:', login.getPassword())
+    print(login, '- Password:', login.getPassword())
 
 def editAccount(user_controller: usC, session_id):
+    logging.info("Attempting to edit user's account.")
     if type(user_controller.getAccount(session_id)) == usr:
         old_info = user_controller.getAccount(session_id)
         print("Leave blank to skip")
@@ -29,6 +33,7 @@ def editAccount(user_controller: usC, session_id):
         print('Invalid user ID')
 
 def editLogin(user_controller: usC, session_id):
+    logging.info("Attempting to edit user's login.")
     if type(user_controller.getAccount(session_id)) == usr:
         old_info = user_controller.getLogin(session_id)
 
@@ -49,6 +54,7 @@ def editLogin(user_controller: usC, session_id):
         print('Invalid user ID')
 
 def getAllUserTransactionsByDate(user_controller: usC, transaction_controller: transactionC, session_id):
+    logging.info("Attempting to retrieve user's transactions by date.")
     try:
         if user_controller.getAccount(session_id):
             month = input("Input month: ")
@@ -66,6 +72,7 @@ def getAllUserTransactionsByDate(user_controller: usC, transaction_controller: t
         print(e.message)
 
 def viewTransactions(transaction_controller: transactionC, user_controller: usC, session_id):
+    logging.info("Attempting to retrieve user's transactions.")
     try:
         if user_controller.getAccount(session_id):
             arr = transaction_controller.getUserTransactions(session_id)
@@ -77,6 +84,7 @@ def viewTransactions(transaction_controller: transactionC, user_controller: usC,
         print(e.message)
 
 def purchaseProduct(product_controller: prC, transaction_controller: transactionC, session_id):
+    logging.info("Attempting to purchase a product.")
     search = input("Input product name or ID to buy: ")
     name_search_result = product_controller.doesProductNameExist(search)
 
@@ -106,7 +114,9 @@ def purchaseProduct(product_controller: prC, transaction_controller: transaction
         confirmation = input("Confirm order by typing y and other to cancel: ")
         if confirmation == 'y':
             try:
+                logging.info('Attempting to create user transaction.')
                 transaction_controller.createTransaction(session_id, name_search_result.getName(), amount_to_buy, price, description)
+                logging.info('Attempting to update product.')
                 product_controller.updateProduct(name_search_result.getID(), name_search_result.getName(),
                                                 name_search_result.getPrice(), new_amount, name_search_result.getName())
             except ValidationError as e:
@@ -134,7 +144,9 @@ def purchaseProduct(product_controller: prC, transaction_controller: transaction
         confirmation = input("Confirm order by typing y and other to cancel: ")
         if confirmation == 'y':
             try:
+                logging.info('Attempting to create user transaction.')
                 transaction_controller.createTransaction(session_id, id_search_result.getName(), amount_to_buy, price, description)
+                logging.info('Attempting to update product.')
                 product_controller.updateProduct(id_search_result.getID(), id_search_result.getName(),
                                                 id_search_result.getPrice(), new_amount, id_search_result.getName())
             except ValidationError as e:

@@ -3,10 +3,13 @@ from Models.user import user as usr
 from Controllers.userController import userController as usC
 from Controllers.transactionController import transactionController as transactionC
 from Controllers.productController import productController as prC
+import logging
 
 def registerUser(user_controller: usC):
     username = input('Username: ')
     password = input('Password: ')
+
+    logging.info("Attempting to register user...")
     
     try:
         user_controller.registerUser(username, password, 'user')
@@ -15,24 +18,34 @@ def registerUser(user_controller: usC):
         print(e.message, 'Try Again.')
 
 def loginUser(user_controller: usC, username, password):
+
+    logging.info("Attempting to login user...")
+
     user_session_id = user_controller.loginUser(username, password)
 
     if user_session_id == 'wrong credentials':
+        logging.info("Login failed due to bad credentials")
         print(user_session_id, '. Try again.')
         return False
     else:
         # Get users Account
+        logging.info("Retrieving account for %s", username)
         return user_controller.getAccount(user_session_id)
 
 def createUserAccount(user_controller: usC, id):
     print('Must create an account.')
     name = input("Name: ")
     email = input("Email: ")
+
+    logging.info("Attempting to create account...")
+
     try:
         account = user_controller.createUser(id, name, email)
+        logging.info("New User Account with ID: %s created.", id)
         print('Account created! Login to start shopping!')
         return account
     except ValidationError as e:
+        logging.info("Account creation failed due to validation exception.")
         print(e.message)
         print('Login and try again')
         return False
@@ -57,21 +70,25 @@ def loginFunction(user_controller: usC):
     if logged_in:
         login_info = user_controller.getLogin(user_session_id)
         print(login_info)
+        logging.info('%s logged in', username)
         return (logged_in, user_session_id, login_info.getRole())
     else:
         return (logged_in, user_session_id, '')
     
 def getAllUsers(user_controller: usC):
+    logging.info('Attempting to retrieve all users')
     arr = user_controller.getAllUsers()
     for user in arr:
         print(user)
 
 def getAllLogins(user_controller: usC):
+    logging.info('Attempting to get all logins')
     arr = user_controller.getAllLogins()
     for login in arr:
         print(login)
 
 def deleteUser(user_controller: usC, transaction_controller: transactionC, session_id):
+    logging.info('Attempting to delete user')
     userID = input("input user's ID: ")
     if type(user_controller.getAccount(userID)) != str:
         try:
@@ -86,10 +103,12 @@ def deleteUser(user_controller: usC, transaction_controller: transactionC, sessi
         print('Invalid User ID')
 
 def findUser(user_controller: usC):
+    logging.info('Attempting to find user')
     username = input("Input user's username: ")
     print(user_controller.getUserByUsername(username))
 
 def editUser(user_controller: usC):
+    logging.info('Attempting to edit user')
     userID = input("Input user's userID: ")
     if type(user_controller.getAccount(userID)) == usr:
         old_info = user_controller.getAccount(userID)
@@ -108,6 +127,7 @@ def editUser(user_controller: usC):
         print('Invalid user ID')
 
 def editUserLogin(user_controller: usC):
+    logging.info('Attempting to edit user login')
     userID = input("Input user's userID: ")
     if type(user_controller.getAccount(userID)) == usr:
         old_info = user_controller.getLogin(userID)
@@ -132,6 +152,7 @@ def editUserLogin(user_controller: usC):
         print('Invalid user ID')
 
 def getUserLogin(user_controller: usC):
+    logging.info('Attempting to retrieve user login.')
     userID = input("Input user's userID: ")
     info = user_controller.getLogin(userID)
     if info:
@@ -140,11 +161,13 @@ def getUserLogin(user_controller: usC):
         print('User not found try again.')
 
 def getAllTransactions(transaction_controller: transactionC):
+    logging.info('Attempting to retrieve all transactions.')
     arr = transaction_controller.getAllTransactions()
     for transaction in arr:
         print(transaction)
 
 def getAllTransactionsByDate(transaction_controller: transactionC):
+    logging.info('Attempting to retrieve all transactions by date.')
     month = input("Input month: ")
     day = input("Input day: ")
     year = input("Input year (ex: 2024): ")
@@ -159,6 +182,7 @@ def getAllTransactionsByDate(transaction_controller: transactionC):
         print(e.message)
 
 def getTransactionById(transaction_controller: transactionC):
+    logging.info('Attempting to retrieve transaction by ID.')
     id = input('Input Transaction Id: ')   
     try:
         print(transaction_controller.getTransactionById(id))                      
@@ -166,6 +190,7 @@ def getTransactionById(transaction_controller: transactionC):
         print(e.message)
 
 def getUserTransactions(transaction_controller: transactionC, user_controller: usC):
+    logging.info("Attempting to retrieve all of user's transactions.")
     userID = input("Input user's id: ")
     try:
         if user_controller.getAccount(userID):
@@ -178,6 +203,7 @@ def getUserTransactions(transaction_controller: transactionC, user_controller: u
         print(e.message)
 
 def deleteAllUserTransactions(transaction_controller: transactionC, user_controller: usC):
+    logging.info("Attempting to delete all of user's transactions.")
     userID = input("Input user's id: ")
     try:
         if user_controller.getAccount(userID):
@@ -188,16 +214,18 @@ def deleteAllUserTransactions(transaction_controller: transactionC, user_control
         print(e.message)
 
 def deleteTransaction(transaction_controller: transactionC):
+    logging.info("Attempting to delete transaction.")
     id = input('Input Transaction Id: ')
     try:
         if transaction_controller.getTransactionById(id):
-            print(transaction_controller.deleteTransaction(id), ' Deleted')
+            print(transaction_controller.deleteTransaction(id), 'Deleted')
         else:
             print('Invalid transaction ID')
     except ValidationError as e:
         print(e.message)
 
 def updateTransaction(transaction_controller: transactionC):
+    logging.info("Attempting to update transaction.")
     id = input('Input Transaction Id: ')
     try:
         transaction = transaction_controller.getTransactionById(id)
@@ -213,9 +241,9 @@ def updateTransaction(transaction_controller: transactionC):
             if amount == '':
                 amount = transaction.get_amount()
             if description == '':
-                description == transaction.get_description()
+                description = transaction.get_description()
             if price == '':
-                price == transaction.get_price()
+                price = transaction.get_price()
             try:
                 print(transaction_controller.updateTransaction(id, purchased, amount, price, description), 'rows updated')
             except ValidationError as e:
@@ -226,6 +254,7 @@ def updateTransaction(transaction_controller: transactionC):
         print(e.message)
 
 def createTransaction(user_controller: usC, transaction_controller: transactionC):
+    logging.info("Attempting to create transaction.")
     userID = input("Input User's ID: ")
     purchased = input("Input item purchased: ")
     amount = input("Input amount purchased: ")
@@ -241,11 +270,13 @@ def createTransaction(user_controller: usC, transaction_controller: transactionC
         print("Invalid user ID")
 
 def getAllProducts(product_controller: prC):
+    logging.info("Attempting to retrieve all products.")
     arr = product_controller.getAllProducts()
     for product in arr:
         print(product)
 
 def getProductById(product_controller: prC):
+    logging.info("Attempting to product by ID.")
     productID = input("Product ID: ")
     try:
         print(product_controller.getProductById(productID))
@@ -253,16 +284,18 @@ def getProductById(product_controller: prC):
         print(e.message)
 
 def createProduct(product_controller: prC):
+    logging.info("Attempting to create product.")
     name = input('Input Name: ')
     price = input('Input Price: ')
     amount = input('Input Amount: ')
 
     try:
-        product_controller.createProduct(name, price, amount)
+        print(product_controller.createProduct(name, price, amount))
     except ValidationError as e:
         print(e.message)
 
 def updateProduct(product_controller: prC):
+    logging.info("Attempting to update product.")
     productID = input("Input Product ID: ")
     try:
         old_product = product_controller.getProductById(productID)
@@ -287,6 +320,7 @@ def updateProduct(product_controller: prC):
         print(e.message)
 
 def deleteProduct(product_controller: prC):
+    logging.info("Attempting to delete product.")
     productID = input("Input Product ID: ")
     try:
         old_product = product_controller.getProductById(productID)
@@ -299,6 +333,7 @@ def deleteProduct(product_controller: prC):
         print(e.message)
 
 def getProductLikeName(product_controller: prC):
+    logging.info("Attempting to retrieve product by name.")
     name = input('Input search name: ')
     arr = product_controller.getProductLikeName(name)
     if len(arr) == 0:

@@ -11,6 +11,8 @@ class ProductsDAO():
         db = client['Project1']
         collection = db['products']
 
+        logging.info("Accessing Products Collection...")
+
         result = collection.find_one({"name": {"$regex": name, "$options": "i"}})
 
         if result:
@@ -25,6 +27,8 @@ class ProductsDAO():
         client = connectionUtility.get_Connection()
         db = client['Project1']
         collection = db['products']
+
+        logging.info("Accessing Products Collection...")
 
         pattern = re.compile(name, re.IGNORECASE)
 
@@ -44,6 +48,8 @@ class ProductsDAO():
         db = client['Project1']
         collection = db['products']
 
+        logging.info("Accessing Products Collection...")
+
         result = collection.find_one({"_id": ObjectId(productID)})
 
         if result:
@@ -58,6 +64,8 @@ class ProductsDAO():
         client = connectionUtility.get_Connection()
         db = client['Project1']
         collection = db['products']
+
+        logging.info("Accessing Products Collection...")
 
         results = collection.find()
 
@@ -75,6 +83,8 @@ class ProductsDAO():
         db = client['Project1']
         collection = db['products']
 
+        logging.info("Accessing Products Collection...")
+
         result = collection.insert_one({"name": product.getName(), "price": int(product.getPrice()), "amount": int(product.getAmount())})
         client.close()
         return self.getProductByID(result.inserted_id)
@@ -83,6 +93,8 @@ class ProductsDAO():
         client = connectionUtility.get_Connection()
         db = client['Project1']
         collection = db['products']
+
+        logging.info("Accessing Products Collection...")
 
         result = collection.update_one({'_id': ObjectId(product.getID())}, 
                         {"$set": {"name": product.getName(), "price": int(product.getPrice()), "amount": int(product.getAmount())}})
@@ -95,6 +107,8 @@ class ProductsDAO():
         client = connectionUtility.get_Connection()
         db = client['Project1']
         collection = db['products']
+
+        logging.info("Accessing Products Collection...")
 
         result = collection.delete_one({"_id": ObjectId(productID)})
 

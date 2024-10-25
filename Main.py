@@ -9,10 +9,15 @@ from Controllers.transactionController import transactionController as transacti
 from Controllers.productController import productController as pC
 from Util.adminFunctionsUtil import *
 from Util.userFunctions import *
+import logging
 
 def main():
 
     print("Welcome To Client Side Store:")
+
+    logging.basicConfig(filename='logs.log', encoding='utf-8', format='%(levelname)s: %(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
+
+    logging.info("\n----Application Start----")
 
     user_dao = UserDao()
     user_service = UserService(user_dao)
@@ -121,16 +126,12 @@ def main():
                         case _:
                             pass                       
                 elif logged_in_selection == 't':
-                    function_selection = input('v = View Transactions, u = Update Transaction, i = Get Transaction By ID, g = Get Transactions By Date, d = Delete Transactions, Other = back:\n')
+                    function_selection = input('v = View Transactions, i = Get Transaction By ID, g = Get Transactions By Date, Other = back:\n')
                     match function_selection:
                         case 'v':
                             viewTransactions(transaction_controller, user_controller, session_id)
-                        case 'u':
-                            updateTransaction(transaction_controller)
                         case 'i':
                             getTransactionById(transaction_controller)
-                        case 'd':
-                            deleteTransaction(transaction_controller)
                         case 'g':
                             getAllUserTransactionsByDate(user_controller, transaction_controller, session_id)
                         case _:

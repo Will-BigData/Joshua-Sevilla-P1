@@ -2,6 +2,7 @@ from Util.connectionUtil import connectionUtility
 from Models.transaction import transaction
 from bson import ObjectId
 import re
+import logging
 
 class TransactionsDAO():
    
@@ -9,6 +10,8 @@ class TransactionsDAO():
         client = connectionUtility.get_Connection()
         db = client['Project1']
         collection = db['transactions']
+
+        logging.info("Accessing Transactions Collection...")
 
         results = collection.find({"userID": ObjectId(userID)})
 

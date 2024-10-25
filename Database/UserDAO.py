@@ -11,6 +11,8 @@ class UserDao():
         db = client['Project1']
         collection = db['Users']
 
+        logging.info("Accessing Users Collection...")
+
         result = collection.find_one({"userID": ObjectId(userID)})
 
         if result:
@@ -27,6 +29,8 @@ class UserDao():
         db = client['Project1']
         collection = db['login']
 
+        logging.info("Accessing Login Collection...")
+
         result = collection.find_one({"username": username})
 
         client.close()
@@ -42,6 +46,8 @@ class UserDao():
         db = client['Project1']
         collection = db['Users']
 
+        logging.info("Accessing Users Collection...")
+
         collection.insert_one({"userID": ObjectId(new_user.get_id()), "name": new_user.get_name(), "email": new_user.get_email()})
 
         client.close()
@@ -52,6 +58,8 @@ class UserDao():
         client = connectionUtility.get_Connection()
         db = client['Project1']
         collection = db['Users']
+
+        logging.info("Accessing Users Collection...")
 
         result = collection.delete_one({"userID": ObjectId(userID)})
 
@@ -64,6 +72,8 @@ class UserDao():
         db = client['Project1']
         collection = db['Users']
 
+        logging.info("Accessing Users Collection...")
+
         result = collection.update_one({"userID": ObjectId(edit_user.get_id())}, {"$set": {"name": edit_user.get_name(), "email": edit_user.get_email()}})
 
         client.close()
@@ -74,6 +84,8 @@ class UserDao():
         client = connectionUtility.get_Connection()
         db = client['Project1']
         collection = db['login']
+
+        logging.info("Accessing Login Collection...")
 
         result = collection.find_one({"username": login_info.getUsername(), "password": login_info.getPassword()})
 
@@ -89,6 +101,8 @@ class UserDao():
         db = client['Project1']
         collection = db['login']
 
+        logging.info("Accessing Login Collection...")
+
         result = collection.insert_one({"username": new_login.getUsername(), "password": new_login.getPassword(), "role": new_login.getRole()})
 
         client.close()
@@ -99,6 +113,8 @@ class UserDao():
         client = connectionUtility.get_Connection()
         db = client['Project1']
         collection = db['login']
+
+        logging.info("Accessing Login Collection...")
 
         result = collection.delete_one({"_id": ObjectId(id)})
 
@@ -111,6 +127,8 @@ class UserDao():
         db = client['Project1']
         collection = db['login']
 
+        logging.info("Accessing Login Collection...")
+
         result = collection.update_one({"_id": ObjectId(new_login.getID())}, 
                                        {"$set": {"username": new_login.getUsername(), "password": new_login.getPassword(), "role": new_login.getRole()}})
         
@@ -120,6 +138,8 @@ class UserDao():
         client = connectionUtility.get_Connection()
         db = client['Project1']
         collection = db['login']
+
+        logging.info("Accessing Login Collection...")
 
         result = collection.find_one({"_id": ObjectId(id)})
 
@@ -133,6 +153,8 @@ class UserDao():
         client = connectionUtility.get_Connection()
         db = client['Project1']
         collection = db['Users']
+
+        logging.info("Accessing Users Collection...")
 
         results = collection.find()
 
@@ -150,6 +172,8 @@ class UserDao():
         client = connectionUtility.get_Connection()
         db = client['Project1']
         collection = db['login']
+
+        logging.info("Accessing Login Collection...")
 
         results = collection.find()
 
